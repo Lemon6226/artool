@@ -4,34 +4,38 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class RasterBufferedImage implements Raster {
-
     private final BufferedImage img;
     private int color;
 
-    public BufferedImage getImg() {
-        return img;
-    }
-
     public RasterBufferedImage(int width, int height) {
         img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+    }
+
+    public BufferedImage getImg() {
+        return img;
     }
 
     public void repaint(Graphics graphics) {
         graphics.drawImage(img, 0, 0, null);
     }
 
-    public Graphics getGraphics(){
+    public Graphics getGraphics() {
         return img.getGraphics();
     }
 
     @Override
     public int getPixel(int x, int y) {
+        if (x < 0 || x >= img.getWidth() || y < 0 || y >= img.getHeight()) {
+            return 0;
+        }
         return img.getRGB(x, y);
     }
 
     @Override
     public void setPixel(int x, int y, int color) {
-        img.setRGB(x, y, color);
+        if (x >= 0 && x < img.getWidth() && y >= 0 && y < img.getHeight()) {
+            img.setRGB(x, y, color);
+        }
     }
 
     @Override
@@ -55,5 +59,4 @@ public class RasterBufferedImage implements Raster {
     public int getHeight() {
         return img.getHeight();
     }
-
 }
